@@ -26,10 +26,17 @@ public class ControllerUseMask : MonoBehaviour
 
     void Start()
     {
-        frontX = front.transform.position.x;
-        frontY = front.transform.position.y;
         frontW = front.rect.width * canvas.scaleFactor;
         frontH = front.rect.height * canvas.scaleFactor;
+
+        // front.eulerAngles = Vector3.zero;
+        // front.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0.0f);
+        mask.pivot = new Vector2(0, 0.5f);
+        // mask.transform.position = new Vector3(Screen.width * 0.5f - frontW/2, Screen.height * 0.5f - frontH/2, 0.0f);
+        // mask.transform.position = new Vector3(Screen.width * 0.5f - frontW/2, Screen.height * 0.5f - frontH/2, 0.0f);
+
+        frontX = front.transform.position.x;
+        frontY = front.transform.position.y;
     }
 
     public void Update()
@@ -52,11 +59,9 @@ public class ControllerUseMask : MonoBehaviour
         {
             if(drag != TypeDrag.NONE && mousePosition != start)
             {
-                Vector2 offset = mousePosition - start;
-                // Vector2 offset = mousePosition - new Vector2(frontX - frontW/2, frontY - frontH/2);
-                float angle = Mathf.Atan2(offset.x, offset.y);
-                mask.transform.eulerAngles = Vector3.forward * (angle * Mathf.Rad2Deg);
-                float distanceToMask = Mathf.Sin(angle) * offset.y;
+                // Vector2 offset = mousePosition - start;
+                Vector2 offset = mousePosition - new Vector2(frontX - frontW/2, frontY - frontH/2);
+                float half = offset.magnitude * 0.5f;
 
                 if(drag == TypeDrag.TOP_LEFT)
                 {
@@ -68,20 +73,35 @@ public class ControllerUseMask : MonoBehaviour
                 }
                 else if(drag == TypeDrag.BOT_LEFT)
                 {
-                    mask.pivot = new Vector2(0, 0.5f);
+                    float angleForX = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
+                    float angleForY = 90 - angleForX;
+                    float x = half / Mathf.Cos(angleForX * Mathf.Deg2Rad);
+                    float y = half / Mathf.Cos(angleForY * Mathf.Deg2Rad);
+                    x = Mathf.Clamp(x, frontX - frontW * 0.5f, frontX + frontW * 0.5f);
+                    y = Mathf.Clamp(y, frontY - frontH * 0.5f, frontY + frontH * 0.5f);
+                    // float angle = Mathf.Atan2(y, x);
+                    float angle = Mathf.Atan2(mousePosition.y, mousePosition.x);
+                    mask.transform.eulerAngles = Vector3.forward * (angle * Mathf.Rad2Deg);
+
+                    mask.pivot = new Vector2(0f, 0.5f);
                     Vector2 maskPos = mousePosition - new Vector2(offset.x, offset.y) * 0.5f;
-                    // Vector2 maskPos = mousePosition;
+                    // maskPos = mousePosition;
                     mask.transform.position = maskPos;
 
-                    back.pivot = new Vector2(1f, 1f);
+                    // back.pivot = new Vector2(0.5f, 0.5f);
+                    back.pivot = new Vector2(1f, 0f);
                     back.transform.position = mousePosition;
+                    // float angleBack = Mathf.Atan2(mousePosition.x - x, mousePosition.y);
+                    // float angleBack = Mathf.Atan2(mousePosition.y, mousePosition.x - x);
+                    float angleBack = Mathf.Atan2(-mousePosition.y, mousePosition.x);
+                    // back.transform.localPosition = new Vector2(-300 + half, back.transform.localPosition.y);
+                    back.transform.localEulerAngles = -(Vector3.forward * (angleBack * Mathf.Rad2Deg));
                 }
                 else if(drag == TypeDrag.BOT_RIGHT)
                 {
                     
                 }
-
-                start = mousePosition;
+                
             }
         }
         else if(Input.GetMouseButtonUp(0))
@@ -95,7 +115,7 @@ public class ControllerUseMask : MonoBehaviour
     void LateUpdate()
     {
         front.eulerAngles = Vector3.zero;
-        front.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0.0f);
+        front.transform.position = new Vector3(frontX, frontY, 0.0f);
 
         // Vector3 pos = front.localPosition;
         // float theta = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
