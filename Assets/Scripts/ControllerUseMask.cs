@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// [ExecuteInEditMode]
 public class ControllerUseMask : MonoBehaviour
 {
     public RectTransform front;
@@ -31,17 +32,18 @@ public class ControllerUseMask : MonoBehaviour
 
         // front.eulerAngles = Vector3.zero;
         // front.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0.0f);
-        mask.pivot = new Vector2(0, 0.5f);
+        // mask.pivot = new Vector2(0, 0.5f);
         // mask.transform.position = new Vector3(Screen.width * 0.5f - frontW/2, Screen.height * 0.5f - frontH/2, 0.0f);
         // mask.transform.position = new Vector3(Screen.width * 0.5f - frontW/2, Screen.height * 0.5f - frontH/2, 0.0f);
 
-        frontX = front.transform.position.x;
-        frontY = front.transform.position.y;
+        frontX = front.rect.position.x;
+        frontY = front.rect.position.y;
     }
 
     public void Update()
     {
-        Vector2 mousePosition = Input.mousePosition;
+        Vector2 mousePosition = Input.mousePosition - new Vector3(canvas.pixelRect.width/2 , canvas.pixelRect.height/2, 0);
+        Debug.Log("Goc : " + new Vector2(frontX - frontW/2, frontY - frontH/2));
         if(Input.GetMouseButtonDown(0))
         {
             if( mousePosition.x >= frontX - frontW/2 && mousePosition.x <= frontX + frontW/2 &&
@@ -62,6 +64,7 @@ public class ControllerUseMask : MonoBehaviour
                 // Vector2 offset = mousePosition - start;
                 Vector2 offset = mousePosition - new Vector2(frontX - frontW/2, frontY - frontH/2);
                 float half = offset.magnitude * 0.5f;
+                Debug.Log(offset);
 
                 if(drag == TypeDrag.TOP_LEFT)
                 {
@@ -77,25 +80,28 @@ public class ControllerUseMask : MonoBehaviour
                     float angleForY = 90 - angleForX;
                     float x = half / Mathf.Cos(angleForX * Mathf.Deg2Rad);
                     float y = half / Mathf.Cos(angleForY * Mathf.Deg2Rad);
+                    // Debug.Log(x + "/" + y);
                     x = Mathf.Clamp(x, frontX - frontW * 0.5f, frontX + frontW * 0.5f);
                     y = Mathf.Clamp(y, frontY - frontH * 0.5f, frontY + frontH * 0.5f);
                     // float angle = Mathf.Atan2(y, x);
-                    float angle = Mathf.Atan2(mousePosition.y, mousePosition.x);
-                    mask.transform.eulerAngles = Vector3.forward * (angle * Mathf.Rad2Deg);
+                    // float angle = Mathf.Atan2(mousePosition.y, mousePosition.x);
+                    // float angle = 90 - Mathf.Atan2(y, x) * Mathf.Rad2Deg;
+                    // mask.transform.eulerAngles = Vector3.forward * (angle);
 
-                    mask.pivot = new Vector2(0f, 0.5f);
-                    Vector2 maskPos = mousePosition - new Vector2(offset.x, offset.y) * 0.5f;
+                    // mask.pivot = new Vector2(0f, 0.5f);
+                    Vector2 maskPos = Vector2.zero - new Vector2(offset.x, offset.y) * 0.5f;
+                    // Debug.Log("Mask pos : " + maskPos);
                     // maskPos = mousePosition;
-                    mask.transform.position = maskPos;
+                    // mask.transform.position = maskPos;
 
                     // back.pivot = new Vector2(0.5f, 0.5f);
-                    back.pivot = new Vector2(1f, 0f);
-                    back.transform.position = mousePosition;
+                    // back.pivot = new Vector2(1f, 0f);
+                    // back.transform.position = mousePosition;
                     // float angleBack = Mathf.Atan2(mousePosition.x - x, mousePosition.y);
                     // float angleBack = Mathf.Atan2(mousePosition.y, mousePosition.x - x);
-                    float angleBack = Mathf.Atan2(-mousePosition.y, mousePosition.x);
+                    // float angleBack = Mathf.Atan2(-mousePosition.y, mousePosition.x);
                     // back.transform.localPosition = new Vector2(-300 + half, back.transform.localPosition.y);
-                    back.transform.localEulerAngles = -(Vector3.forward * (angleBack * Mathf.Rad2Deg));
+                    // back.transform.localEulerAngles = -(Vector3.forward * (angleBack * Mathf.Rad2Deg));
                 }
                 else if(drag == TypeDrag.BOT_RIGHT)
                 {
