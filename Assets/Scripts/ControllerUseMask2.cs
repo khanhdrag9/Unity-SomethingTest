@@ -8,6 +8,7 @@ public class ControllerUseMask2 : MonoBehaviour
     public GameObject front;
     public float frontSize = 1f;
     public GameObject back;
+    public bool isLimitDrag = true;
 
     public enum TypeDrag {
         NONE,
@@ -81,8 +82,9 @@ public class ControllerUseMask2 : MonoBehaviour
                 if(drag == TypeDrag.TOP)
                 {
                     float offsetY = offset.y;
-                    if(offsetY > 0)offsetY = 0;
-                    else if(offsetY < -size)offsetY = -size;
+                    if(isLimitDrag)
+                        if(offsetY > 0)offsetY = 0;
+                        else if(offsetY < -size)offsetY = -size;
 
                     mask.transform.position = maskPos + new Vector2(0, offsetY/2);
                     back.transform.position = new Vector2(origin.x, origin.y + size - Mathf.Abs(offsetY));
@@ -90,8 +92,9 @@ public class ControllerUseMask2 : MonoBehaviour
                 else if(drag == TypeDrag.RIGHT)
                 {
                     float offsetX = offset.x;
-                    if(offsetX > 0)offsetX = 0;
-                    else if(offsetX < -size)offsetX = -size;
+                    if(isLimitDrag)
+                        if(offsetX > 0)offsetX = 0;
+                        else if(offsetX < -size)offsetX = -size;
 
                     mask.transform.position = maskPos + new Vector2(offsetX/2, 0);
                     back.transform.position = new Vector2(origin.x + size - Mathf.Abs(offsetX), origin.y);
@@ -99,18 +102,19 @@ public class ControllerUseMask2 : MonoBehaviour
                 else if(drag == TypeDrag.BOT)
                 {
                     float offsetY = offset.y;
-                    if(offsetY < 0)offsetY = 0;
-                    else if(offsetY > size)offsetY = size;
+                    if(isLimitDrag)
+                        if(offsetY < 0)offsetY = 0;
+                        else if(offsetY > size)offsetY = size;
 
                     mask.transform.position = maskPos + new Vector2(0, offsetY/2);
                     back.transform.position = new Vector2(origin.x, origin.y - size + Mathf.Abs(offsetY));
-                    // back.transform.localScale = new Vector2(1, -1);
                 }
                 else if(drag == TypeDrag.LEFT)
                 {
                     float offsetX = offset.x;
-                    if(offsetX < 0)offsetX = 0;
-                    else if(offsetX > size)offsetX = size;
+                    if(isLimitDrag)
+                        if(offsetX < 0)offsetX = 0;
+                        else if(offsetX > size)offsetX = size;
 
                     mask.transform.position = maskPos + new Vector2(offsetX/2, 0);
                     back.transform.position = new Vector2(origin.x - size + Mathf.Abs(offsetX), origin.y);
@@ -119,6 +123,7 @@ public class ControllerUseMask2 : MonoBehaviour
                 {
                     float angle = -45;
                     float dy = Mathf.Abs(offset.magnitude);
+                    if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x - halfSize, origin.y + halfSize);
                     mask.transform.position = anchor + new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, -dy) / 2;
@@ -131,6 +136,7 @@ public class ControllerUseMask2 : MonoBehaviour
                 {
                     float angle = 45;
                     float dy = Mathf.Abs(offset.magnitude);
+                    if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x + halfSize, origin.y + halfSize);
                     mask.transform.position = anchor - new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, -dy) / 2;
@@ -143,6 +149,7 @@ public class ControllerUseMask2 : MonoBehaviour
                 {
                     float angle = 45;
                     float dy = Mathf.Abs(offset.magnitude);
+                    if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x - halfSize, origin.y - halfSize);
                     mask.transform.position = anchor + new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, dy) / 2;
@@ -155,6 +162,7 @@ public class ControllerUseMask2 : MonoBehaviour
                 {
                     float angle = -45;
                     float dy = Mathf.Abs(offset.magnitude);
+                    if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x + halfSize, origin.y - halfSize);
                     mask.transform.position = anchor + new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, dy) / 2;
