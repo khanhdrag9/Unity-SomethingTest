@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerUseMask2 : MonoBehaviour
+public class ControllerUseMask3 : MonoBehaviour
 {
     public GameObject OBJ_mask = null;
     public GameObject OBJ_front = null;
@@ -44,12 +44,7 @@ public class ControllerUseMask2 : MonoBehaviour
         origin = front.transform.position;
         size = frontSize * front.transform.localScale.x;
 
-        maskScale = mask.transform.localScale;
-        maskPos = mask.transform.localPosition;
-
-        backPos = origin + new Vector2(size, size);
-        back.transform.position = backPos;
-        // maskPos = mask.transform.position
+        back.SetActive(false);
     }
 
     // Update is called once per frame
@@ -95,13 +90,15 @@ public class ControllerUseMask2 : MonoBehaviour
                 Vector2 offset = mousePosition - start;
                 if(drag == TypeDrag.TOP)
                 {
+                    back.SetActive(true);
                     float offsetY = offset.y;
                     if(isLimitDrag)
                         if(offsetY > 0)offsetY = 0;
                         else if(offsetY < -size)offsetY = -size;
 
-                    mask.transform.position = maskPos + new Vector2(0, offsetY/2);
-                    back.transform.position = new Vector2(origin.x, origin.y + size - Mathf.Abs(offsetY));
+                    Vector2 anchor = new Vector2(origin.x, origin.y + halfSize);
+                    mask.transform.position = anchor + new Vector2(0, halfSize + offsetY/2);
+                    back.transform.position = new Vector2(origin.x, origin.y + size + offsetY);
                 }
                 else if(drag == TypeDrag.RIGHT)
                 {
@@ -191,7 +188,7 @@ public class ControllerUseMask2 : MonoBehaviour
         else if(Input.GetMouseButtonUp(0))
         {
             drag = TypeDrag.NONE;
-            NewTurn();
+            // NewTurn();
         }
     }
 
@@ -247,19 +244,19 @@ public class ControllerUseMask2 : MonoBehaviour
             break;
             case TypeDrag.TOP_LEFT:
                 Flip(true, false);
-                mask.transform.localScale = new Vector2(2, 2);
+                // mask.transform.localScale = new Vector2(2, 2);
             break;
             case TypeDrag.TOP_RIGHT:
                 Flip(true, false);
-                mask.transform.localScale = new Vector2(2, 2);
+                // mask.transform.localScale = new Vector2(2, 2);
             break;
             case TypeDrag.BOT_LEFT:
                 Flip(true, true);
-                mask.transform.localScale = new Vector2(2, 2);
+                // mask.transform.localScale = new Vector2(2, 2);
             break;
             case TypeDrag.BOT_RIGHT:
                 Flip(true, true);
-                mask.transform.localScale = new Vector2(2, 2);
+                // mask.transform.localScale = new Vector2(2, 2);
             break;
             default:
             break;
