@@ -34,7 +34,7 @@ public class ControllerUseMask2 : MonoBehaviour
         maskScale = mask.transform.localScale;
         maskPos = mask.transform.localPosition;
         back.transform.position = origin + new Vector2(size, size);
-        // maskPos = mask.transform.position;
+        // maskPos = mask.transform.position
     }
 
     // Update is called once per frame
@@ -69,7 +69,7 @@ public class ControllerUseMask2 : MonoBehaviour
                     else if(mousePosition.y < origin.y - qsize) drag = TypeDrag.BOT_RIGHT;
                 }
                 start = mousePosition;
-                Debug.Log(drag);
+                UpdateType();
             }
         }
 
@@ -104,6 +104,7 @@ public class ControllerUseMask2 : MonoBehaviour
 
                     mask.transform.position = maskPos + new Vector2(0, offsetY/2);
                     back.transform.position = new Vector2(origin.x, origin.y - size + Mathf.Abs(offsetY));
+                    // back.transform.localScale = new Vector2(1, -1);
                 }
                 else if(drag == TypeDrag.LEFT)
                 {
@@ -116,19 +117,42 @@ public class ControllerUseMask2 : MonoBehaviour
                 }
                 else if(drag == TypeDrag.TOP_LEFT)
                 {
-                    
+                    float angle = -45;
+                    float dy = Mathf.Abs(offset.magnitude);
+                    float curSize = size * 2;
+                    Vector2 anchor = new Vector3(origin.x - halfSize, origin.y + halfSize);
+                    mask.transform.position = anchor + new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, -dy) / 2;
+                    mask.transform.localEulerAngles = Vector3.forward * angle;
+
+                    back.transform.position = new Vector2(origin.x - size + dy, origin.y + size - dy);
+                    back.transform.eulerAngles = Vector3.forward * -90;
                 }
                 else if(drag == TypeDrag.TOP_RIGHT)
                 {
-                    
+                    float angle = 45;
+                    float dy = Mathf.Abs(offset.magnitude);
+                    float curSize = size * 2;
+                    Vector2 anchor = new Vector3(origin.x + halfSize, origin.y + halfSize);
+                    mask.transform.position = anchor - new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, -dy) / 2;
+                    mask.transform.localEulerAngles = Vector3.forward * angle;
+
+                    back.transform.position = new Vector2(origin.x + size - dy, origin.y + size - dy);
+                    back.transform.eulerAngles = Vector3.forward * 90;
                 }
                 else if(drag == TypeDrag.BOT_LEFT)
                 {
-                    
+                    float angle = 45;
+                    float dy = Mathf.Abs(offset.magnitude);
+                    float curSize = size * 2;
+                    Vector2 anchor = new Vector3(origin.x - halfSize, origin.y - halfSize);
+                    mask.transform.position = anchor + new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, -dy) / 2;
+                    mask.transform.localEulerAngles = Vector3.forward * angle;
+
+                    back.transform.position = new Vector2(origin.x - size + dy, origin.y + size - dy);
+                    back.transform.eulerAngles = Vector3.forward * -90;                    
                 }
                 else if(drag == TypeDrag.BOT_RIGHT)
                 {
-                    
                 }
                 
             }
@@ -136,6 +160,59 @@ public class ControllerUseMask2 : MonoBehaviour
         else if(Input.GetMouseButtonUp(0))
         {
             drag = TypeDrag.NONE;
+        }
+    }
+
+
+    void Flip(bool x, bool y)
+    {
+        var sprite = back.GetComponent<SpriteRenderer>();
+        sprite.flipX = x;
+        sprite.flipY = y;
+    }
+
+    void UpdateType()
+    {
+        switch(drag)
+        {
+            case TypeDrag.TOP:
+                Flip(false, true);
+                mask.transform.localScale = new Vector2(1, 1);
+                mask.transform.eulerAngles = Vector3.zero;
+            break;
+            case TypeDrag.RIGHT:
+                Flip(true, false);
+                mask.transform.localScale = new Vector2(1, 1);
+                mask.transform.eulerAngles = Vector3.zero;
+            break;
+            case TypeDrag.BOT:
+                Flip(false, true);
+                mask.transform.localScale = new Vector2(1, 1);
+                mask.transform.eulerAngles = Vector3.zero;
+            break;
+            case TypeDrag.LEFT:
+                Flip(true, false);
+                mask.transform.localScale = new Vector2(1, 1);
+                mask.transform.eulerAngles = Vector3.zero;
+            break;
+            case TypeDrag.TOP_LEFT:
+                Flip(true, false);
+                mask.transform.localScale = new Vector2(2, 2);
+            break;
+            case TypeDrag.TOP_RIGHT:
+                Flip(true, false);
+                mask.transform.localScale = new Vector2(2, 2);
+            break;
+            case TypeDrag.BOT_LEFT:
+                Flip(true, true);
+                mask.transform.localScale = new Vector2(2, 2);
+            break;
+            case TypeDrag.BOT_RIGHT:
+                Flip(true, true);
+                mask.transform.localScale = new Vector2(2, 2);
+            break;
+            default:
+            break;
         }
     }
 }
