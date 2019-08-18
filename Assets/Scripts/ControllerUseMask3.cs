@@ -43,6 +43,8 @@ public class ControllerUseMask3 : MonoBehaviour
 
         origin = front.transform.position;
         size = frontSize * front.transform.localScale.x;
+        maskPos = mask.transform.position;
+        
 
         back.SetActive(false);
     }
@@ -140,7 +142,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x - halfSize, origin.y + halfSize);
-                    mask.transform.position = anchor + new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, -dy) / 2;
+                    mask.transform.position = anchor - new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, -dy) / 2;
                     mask.transform.localEulerAngles = Vector3.forward * angle;
 
                     back.transform.position = new Vector2(origin.x - size + dy, origin.y + size - dy);
@@ -153,7 +155,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x + halfSize, origin.y + halfSize);
-                    mask.transform.position = anchor - new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, -dy) / 2;
+                    mask.transform.position = anchor + new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, -dy) / 2;
                     mask.transform.localEulerAngles = Vector3.forward * angle;
 
                     back.transform.position = new Vector2(origin.x + size - dy, origin.y + size - dy);
@@ -166,7 +168,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x - halfSize, origin.y - halfSize);
-                    mask.transform.position = anchor + new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, dy) / 2;
+                    mask.transform.position = anchor - new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, dy) / 2;
                     mask.transform.localEulerAngles = Vector3.forward * angle;
 
                     back.transform.position = new Vector2(origin.x - size + dy, origin.y - size + dy);
@@ -179,7 +181,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     if(isLimitDrag && dy > size)dy = size;
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x + halfSize, origin.y - halfSize);
-                    mask.transform.position = anchor + new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, dy) / 2;
+                    mask.transform.position = anchor - new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, dy) / 2;
                     mask.transform.localEulerAngles = Vector3.forward * angle;
 
                     back.transform.position = new Vector2(origin.x + size - dy, origin.y - size + dy);
@@ -191,7 +193,7 @@ public class ControllerUseMask3 : MonoBehaviour
         else if(Input.GetMouseButtonUp(0))
         {
             drag = TypeDrag.NONE;
-            // NewTurn();
+            NewTurn();
         }
     }
 
@@ -203,13 +205,14 @@ public class ControllerUseMask3 : MonoBehaviour
         mask.transform.position = maskPos;
         mask.transform.eulerAngles = Vector3.zero;
         mask.transform.localScale = new Vector2(1, 1);
-        mask.GetComponent<SpriteMask>().frontSortingOrder = orderSortForShow;
-        mask.GetComponent<SpriteMask>().backSortingOrder = orderSortForHide;
+        // mask.GetComponent<SpriteMask>().frontSortingOrder = orderSortForShow;
+        // mask.GetComponent<SpriteMask>().backSortingOrder = orderSortForHide;
 
         back = Instantiate(OBJ_back);
         back.transform.position = backPos;
-        back.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-        back.GetComponent<SpriteRenderer>().sortingOrder = orderSortForShow;
+        back.SetActive(false);
+        // back.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+        // back.GetComponent<SpriteRenderer>().sortingOrder = orderSortForShow;
 
         front.transform.position = origin;
     }
@@ -247,19 +250,19 @@ public class ControllerUseMask3 : MonoBehaviour
             break;
             case TypeDrag.TOP_LEFT:
                 Flip(true, false);
-                // mask.transform.localScale = new Vector2(2, 2);
+                mask.transform.localScale = new Vector2(2, 2);
             break;
             case TypeDrag.TOP_RIGHT:
                 Flip(true, false);
-                // mask.transform.localScale = new Vector2(2, 2);
+                mask.transform.localScale = new Vector2(2, 2);
             break;
             case TypeDrag.BOT_LEFT:
                 Flip(true, true);
-                // mask.transform.localScale = new Vector2(2, 2);
+                mask.transform.localScale = new Vector2(2, 2);
             break;
             case TypeDrag.BOT_RIGHT:
                 Flip(true, true);
-                // mask.transform.localScale = new Vector2(2, 2);
+                mask.transform.localScale = new Vector2(2, 2);
             break;
             default:
             break;
