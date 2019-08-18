@@ -87,10 +87,10 @@ public class ControllerUseMask3 : MonoBehaviour
         {
             if(drag != TypeDrag.NONE && mousePosition != start)
             {
+                back.SetActive(true);
                 Vector2 offset = mousePosition - start;
                 if(drag == TypeDrag.TOP)
                 {
-                    back.SetActive(true);
                     float offsetY = offset.y;
                     if(isLimitDrag)
                         if(offsetY > 0)offsetY = 0;
@@ -107,8 +107,9 @@ public class ControllerUseMask3 : MonoBehaviour
                         if(offsetX > 0)offsetX = 0;
                         else if(offsetX < -size)offsetX = -size;
 
-                    mask.transform.position = maskPos + new Vector2(offsetX/2, 0);
-                    back.transform.position = new Vector2(origin.x + size - Mathf.Abs(offsetX), origin.y);
+                    Vector2 anchor = new Vector2(origin.x + halfSize, origin.y);
+                    mask.transform.position = anchor + new Vector2(halfSize + offsetX/2, 0);
+                    back.transform.position = new Vector2(origin.x + size + offsetX, origin.y);
                 }
                 else if(drag == TypeDrag.BOT)
                 {
@@ -117,7 +118,8 @@ public class ControllerUseMask3 : MonoBehaviour
                         if(offsetY < 0)offsetY = 0;
                         else if(offsetY > size)offsetY = size;
 
-                    mask.transform.position = maskPos + new Vector2(0, offsetY/2);
+                    Vector2 anchor = new Vector2(origin.x, origin.y - halfSize);
+                    mask.transform.position = anchor - new Vector2(0, halfSize - offsetY/2);
                     back.transform.position = new Vector2(origin.x, origin.y - size + Mathf.Abs(offsetY));
                 }
                 else if(drag == TypeDrag.LEFT)
@@ -127,8 +129,9 @@ public class ControllerUseMask3 : MonoBehaviour
                         if(offsetX < 0)offsetX = 0;
                         else if(offsetX > size)offsetX = size;
 
-                    mask.transform.position = maskPos + new Vector2(offsetX/2, 0);
-                    back.transform.position = new Vector2(origin.x - size + Mathf.Abs(offsetX), origin.y);
+                    Vector2 anchor = new Vector2(origin.x - halfSize, origin.y);
+                    mask.transform.position = anchor - new Vector2(halfSize - offsetX/2, 0);
+                    back.transform.position = new Vector2(origin.x - size + offsetX, origin.y);
                 }
                 else if(drag == TypeDrag.TOP_LEFT)
                 {
