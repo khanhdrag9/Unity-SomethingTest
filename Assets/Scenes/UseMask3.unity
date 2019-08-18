@@ -521,7 +521,7 @@ MonoBehaviour:
   OBJ_back: {fileID: 1536416842}
   frontSize: 8.68
   isLimitDrag: 1
-  orderSortForShow: 0
+  orderSortForShow: 4
   orderSortForHide: 0
 --- !u!4 &1727145653
 Transform:

@@ -101,6 +101,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     Vector2 anchor = new Vector2(origin.x, origin.y + halfSize);
                     mask.transform.position = anchor + new Vector2(0, halfSize + offsetY/2);
                     back.transform.position = new Vector2(origin.x, origin.y + size + offsetY);
+                    back.transform.eulerAngles = Vector3.zero;
                 }
                 else if(drag == TypeDrag.RIGHT)
                 {
@@ -112,6 +113,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     Vector2 anchor = new Vector2(origin.x + halfSize, origin.y);
                     mask.transform.position = anchor + new Vector2(halfSize + offsetX/2, 0);
                     back.transform.position = new Vector2(origin.x + size + offsetX, origin.y);
+                    back.transform.eulerAngles = Vector3.zero;
                 }
                 else if(drag == TypeDrag.BOT)
                 {
@@ -123,6 +125,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     Vector2 anchor = new Vector2(origin.x, origin.y - halfSize);
                     mask.transform.position = anchor - new Vector2(0, halfSize - offsetY/2);
                     back.transform.position = new Vector2(origin.x, origin.y - size + Mathf.Abs(offsetY));
+                    back.transform.eulerAngles = Vector3.zero;
                 }
                 else if(drag == TypeDrag.LEFT)
                 {
@@ -134,6 +137,7 @@ public class ControllerUseMask3 : MonoBehaviour
                     Vector2 anchor = new Vector2(origin.x - halfSize, origin.y);
                     mask.transform.position = anchor - new Vector2(halfSize - offsetX/2, 0);
                     back.transform.position = new Vector2(origin.x - size + offsetX, origin.y);
+                    back.transform.eulerAngles = Vector3.zero;
                 }
                 else if(drag == TypeDrag.TOP_LEFT)
                 {
@@ -205,14 +209,14 @@ public class ControllerUseMask3 : MonoBehaviour
         mask.transform.position = maskPos;
         mask.transform.eulerAngles = Vector3.zero;
         mask.transform.localScale = new Vector2(1, 1);
-        // mask.GetComponent<SpriteMask>().frontSortingOrder = orderSortForShow;
+        mask.GetComponent<SpriteMask>().frontSortingOrder = orderSortForShow;
         // mask.GetComponent<SpriteMask>().backSortingOrder = orderSortForHide;
 
         back = Instantiate(OBJ_back);
         back.transform.position = backPos;
         back.SetActive(false);
         // back.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-        // back.GetComponent<SpriteRenderer>().sortingOrder = orderSortForShow;
+        back.GetComponent<SpriteRenderer>().sortingOrder = orderSortForShow;
 
         front.transform.position = origin;
     }
