@@ -145,14 +145,23 @@ public class ControllerUseMask2 : MonoBehaviour
                     float dy = Mathf.Abs(offset.magnitude);
                     float curSize = size * 2;
                     Vector2 anchor = new Vector3(origin.x - halfSize, origin.y - halfSize);
-                    mask.transform.position = anchor + new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad) * size, Mathf.Sin(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, -dy) / 2;
+                    mask.transform.position = anchor + new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(dy, dy) / 2;
                     mask.transform.localEulerAngles = Vector3.forward * angle;
 
-                    back.transform.position = new Vector2(origin.x - size + dy, origin.y + size - dy);
+                    back.transform.position = new Vector2(origin.x - size + dy, origin.y - size + dy);
                     back.transform.eulerAngles = Vector3.forward * -90;                    
                 }
                 else if(drag == TypeDrag.BOT_RIGHT)
                 {
+                    float angle = -45;
+                    float dy = Mathf.Abs(offset.magnitude);
+                    float curSize = size * 2;
+                    Vector2 anchor = new Vector3(origin.x + halfSize, origin.y - halfSize);
+                    mask.transform.position = anchor + new Vector2(Mathf.Sin(angle * Mathf.Deg2Rad) * size, Mathf.Cos(angle * Mathf.Deg2Rad) * size) + new Vector2(-dy, dy) / 2;
+                    mask.transform.localEulerAngles = Vector3.forward * angle;
+
+                    back.transform.position = new Vector2(origin.x + size - dy, origin.y - size + dy);
+                    back.transform.eulerAngles = Vector3.forward * 90;    
                 }
                 
             }
