@@ -33,6 +33,7 @@ public class ControllerUseMask2 : MonoBehaviour
         size = frontSize * front.transform.localScale.x;
         maskScale = mask.transform.localScale;
         maskPos = mask.transform.localPosition;
+        back.transform.position = origin + new Vector2(size, size);
         // maskPos = mask.transform.position;
     }
 
@@ -76,21 +77,42 @@ public class ControllerUseMask2 : MonoBehaviour
         {
             if(drag != TypeDrag.NONE && mousePosition != start)
             {
+                Vector2 offset = mousePosition - start;
                 if(drag == TypeDrag.TOP)
                 {
+                    float offsetY = offset.y;
+                    if(offsetY > 0)offsetY = 0;
+                    else if(offsetY < -size)offsetY = -size;
 
+                    mask.transform.position = maskPos + new Vector2(0, offsetY/2);
+                    back.transform.position = new Vector2(origin.x, origin.y + size - Mathf.Abs(offsetY));
                 }
                 else if(drag == TypeDrag.RIGHT)
                 {
-                    
+                    float offsetX = offset.x;
+                    if(offsetX > 0)offsetX = 0;
+                    else if(offsetX < -size)offsetX = -size;
+
+                    mask.transform.position = maskPos + new Vector2(offsetX/2, 0);
+                    back.transform.position = new Vector2(origin.x + size - Mathf.Abs(offsetX), origin.y);
                 }
                 else if(drag == TypeDrag.BOT)
                 {
-                    
+                    float offsetY = offset.y;
+                    if(offsetY < 0)offsetY = 0;
+                    else if(offsetY > size)offsetY = size;
+
+                    mask.transform.position = maskPos + new Vector2(0, offsetY/2);
+                    back.transform.position = new Vector2(origin.x, origin.y - size + Mathf.Abs(offsetY));
                 }
                 else if(drag == TypeDrag.LEFT)
                 {
-                    
+                    float offsetX = offset.x;
+                    if(offsetX < 0)offsetX = 0;
+                    else if(offsetX > size)offsetX = size;
+
+                    mask.transform.position = maskPos + new Vector2(offsetX/2, 0);
+                    back.transform.position = new Vector2(origin.x - size + Mathf.Abs(offsetX), origin.y);
                 }
                 else if(drag == TypeDrag.TOP_LEFT)
                 {
