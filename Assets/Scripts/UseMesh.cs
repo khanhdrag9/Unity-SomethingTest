@@ -20,8 +20,8 @@ public class UseMesh : MonoBehaviour
     public float PRP_right = 0.5f;
     public float PRP_top = 0.5f;
     public float PRP_bot = -0.5f;
-    public float PRP_changeX = 0.5f;
-    public float PRP_changeY = 0.5f;
+    float PRP_changeX = 0.5f;
+    float PRP_changeY = 0.5f;
     public Vector2 PRP_size = new Vector2(7, 7);
 
     public enum DirectDrag{
@@ -57,6 +57,8 @@ public class UseMesh : MonoBehaviour
             isDragging = true;
 
             GameObject backobj = new GameObject("Back", typeof(MeshFilter), typeof(MeshRenderer));
+            backobj.GetComponent<MeshRenderer>().material = MAT_backPage;
+            backobj.GetComponent<MeshFilter>().mesh = new Mesh();
             backs.Add(backobj.GetComponent<MeshFilter>().mesh);
         }
         if(Input.GetMouseButton(0))
@@ -65,6 +67,8 @@ public class UseMesh : MonoBehaviour
             
             if(isDragging)
             {
+                List<Vector3> backVetices = new List<Vector3>();
+
                 //Find vertex are changed
                 for(int i = 0; i < vertices.Length; i++)
                 {
@@ -73,17 +77,48 @@ public class UseMesh : MonoBehaviour
                     {
                         if((offset.x < 0 && v.x > mousePosition.x) || (offset.x > 0 && v.x < mousePosition.x))
                         {
-                            v.x += offset.x;
+                            v.x += offset.x/2;
+                            backVetices.Add(v);
                         }
                     }
                     else
                     {
                         if((offset.y < 0 && v.y > mousePosition.y) || (offset.y > 0 && v.y < mousePosition.y))
                         {
-                            v.y += offset.y;
+                            v.y += offset.y/2;
+                            backVetices.Add(v);
                         }
                     }
+                    vertices[i] = v;
+
+                   
                 }
+
+                int[] backTri = new int[backVetices.Count * 2];
+                
+                if(backVetices.Count == 2)
+                {
+                    backVetices.Add(backVetices[0] + new Vector3(offset.x/2, offset.y/2, 0));
+                    backVetices.Add(backVetices[1] + new Vector3(offset.x/2, offset.y/2, 0));
+                    backTri = new int[]{0,1,3, 3, 2, 0};
+                }
+                else if(backVetices.Count == 1)
+                {
+
+                }
+
+                // Mesh current = backs[backs.Count - 1];
+                if(backTri.Length > 0)
+                {
+                    backs[backs.Count - 1].Clear(false);
+                    backs[backs.Count - 1].vertices = backVetices.ToArray();
+                    backs[backs.Count - 1].uv = CopyVerticesToUV(backs[backs.Count - 1].vertices);
+                    backs[backs.Count - 1].triangles = backTri;
+                    backs[backs.Count - 1].RecalculateNormals();
+                }
+
+                
+                
                 ReorderVertex();
                 uv = CopyVerticesToUV(vertices);
                 ReCalculateTriangle();
@@ -166,32 +201,46 @@ public class UseMesh : MonoBehaviour
         {
             for(int j = i + 1; j < vertices.Length; j++)
             {
-                if(vertices[j].y > vertices[i].y)
+                if(vertices[j].y > vertices[i].y || vertices[j].x < vertices[i].x)
                 {
                     Vector2 p = vertices[i];
                     vertices[i] = vertices[j];
                     vertices[j] = p;
                 }
-                // else if(vertices[j].y == vertices[i].y && vertices[j].x > vertices[i].x)
-                // {
-                //     Vector2 p = vertices[i];
-                //     vertices[i] = vertices[j];
-                //     vertices[j] = p;
-                // }
             }
-            Debug.Log(vertices[i] + ", ");
+            // Debug.Log(vertices[i] + ", ");
         }
 
     }
-    void ReCalculateTriangle()
+    void ReCalculateTriangle(int[] tri)
     {
-        
+        int end = tri.Length - 1;
+        List<int> newTri = new List<int>();
+        int subStart = 0;
+        int subEnd = 0;
+        while(true)
+        {
+            newTri.Add(subStart);
+            newTri.Add(end - subEnd - 1);
+            newTri.Add(end - subEnd);
+            if(end - subEnd - 1 <= subStart)break;
+
+            newTri.Add(end - subEnd);
+            newTri.Add(subStart + 1);
+            newTri.Add(subStart);
+
+            subEnd++;
+            subStart++;
+            if(end - subEnd <= subStart + 1)break;
+        }
+
+        triangles = newTri.ToArray();
     }
 
     public Vector2[] CopyVerticesToUV(Vector3[] p_vertices)
     {
         Vector2[] newUV = new Vector2[p_vertices.Length];
-        for(int i = 0; i < p_vertices.Length; i++) newUV[i] = new Vector2(p_vertices[i].x + PRP_changeX, p_vertices[i].y + PRP_changeY);
+        for(int i = 0; i < p_vertices.Length; i++) newUV[i] = new Vector2(p_vertices[i].x/PRP_size.x + PRP_changeX, p_vertices[i].y/PRP_size.y + PRP_changeY);
         return newUV;
     }
 }

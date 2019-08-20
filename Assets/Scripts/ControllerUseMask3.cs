@@ -209,14 +209,14 @@ public class ControllerUseMask3 : MonoBehaviour
         mask.transform.position = maskPos;
         mask.transform.eulerAngles = Vector3.zero;
         mask.transform.localScale = new Vector2(1, 1);
-        mask.GetComponent<SpriteMask>().frontSortingOrder = orderSortForShow;
+        // mask.GetComponent<SpriteMask>().frontSortingOrder = orderSortForShow;
         // mask.GetComponent<SpriteMask>().backSortingOrder = orderSortForHide;
 
         back = Instantiate(OBJ_back);
         back.transform.position = backPos;
         back.SetActive(false);
         // back.GetComponent<SpriteRenderer>().maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-        back.GetComponent<SpriteRenderer>().sortingOrder = orderSortForShow;
+        // back.GetComponent<SpriteRenderer>().sortingOrder = orderSortForShow;
 
         front.transform.position = origin;
     }
